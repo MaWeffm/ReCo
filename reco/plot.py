@@ -44,11 +44,22 @@ class PlotPanel:
     generate
         Generate and save plots.
     """
+
     logger = LoggerDesc()
 
-    def __init__(self, logger=None, sample_name=None, sample_type=None, read_count_df=None,
-                 expected_reads=0, observed_reads=0, trimmed_reads=0, aligned_reads=0,
-                 template_marker="template", output_dir=None):
+    def __init__(
+        self,
+        logger=None,
+        sample_name=None,
+        sample_type=None,
+        read_count_df=None,
+        expected_reads=0,
+        observed_reads=0,
+        trimmed_reads=0,
+        aligned_reads=0,
+        template_marker="template",
+        output_dir=None,
+    ):
         self.logger = logger
         self.sample_name = sample_name
         self.sample_type = sample_type
@@ -62,8 +73,12 @@ class PlotPanel:
         self.template_marker = template_marker
 
         self.output_dir = output_dir
-        self.pdf_file = os.path.join(self.output_dir, f"{self.sample_name}_plot_panel.pdf")
-        self.png_file = os.path.join(self.output_dir, f"{self.sample_name}_plot_panel.png")
+        self.pdf_file = os.path.join(
+            self.output_dir, f"{self.sample_name}_plot_panel.pdf"
+        )
+        self.png_file = os.path.join(
+            self.output_dir, f"{self.sample_name}_plot_panel.png"
+        )
 
     def generate(self):
         """
@@ -73,10 +88,12 @@ class PlotPanel:
 
         """
         fig = plt.figure(figsize=(20, 20))
-        fig.suptitle(f"{self.sample_name}\n"
-                     f"Expected reads: {self.expected_reads:n}\n"
-                     f"Observed reads: {self.observed_reads:n} ({round(self.observed_reads / (self.expected_reads / 100), 2)}% of expected)",
-                     y=1.0)
+        fig.suptitle(
+            f"{self.sample_name}\n"
+            f"Expected reads: {self.expected_reads:n}\n"
+            f"Observed reads: {self.observed_reads:n} ({round(self.observed_reads / (self.expected_reads / 100), 2)}% of expected)",
+            y=1.0,
+        )
         grid_spec = fig.add_gridspec(8, 16)
 
         self._rates_bar_plot(fig, grid_spec)
@@ -247,27 +264,58 @@ class PlotPanel:
         ax3.spines["top"].set_visible(False)
         ax3.spines["right"].set_visible(False)
 
-        self.read_count_df.sort_values(by=self.sample_name, ascending=True, inplace=True)
+        self.read_count_df.sort_values(
+            by=self.sample_name, ascending=True, inplace=True
+        )
         self.read_count_df["i"] = range(0, self.read_count_df.shape[0])
 
         if self.sample_type == "single":
-            df_excl_template = self.read_count_df[~self.read_count_df.index.str.contains(self.template_marker)]
-            df_only_template = self.read_count_df[self.read_count_df.index.str.contains(self.template_marker)]
+            df_excl_template = self.read_count_df[
+                ~self.read_count_df.index.str.contains(self.template_marker)
+            ]
+            df_only_template = self.read_count_df[
+                self.read_count_df.index.str.contains(self.template_marker)
+            ]
             template_label = "template"
         elif self.sample_type == "paired":
-            df_excl_template = self.read_count_df[~(self.read_count_df.index.get_level_values(0).str.contains(self.template_marker)) & ~(self.read_count_df.index.get_level_values(1).str.contains(self.template_marker))]
-            df_only_template = self.read_count_df[(self.read_count_df.index.get_level_values(0).str.contains(self.template_marker)) & (self.read_count_df.index.get_level_values(1).str.contains(self.template_marker))]
+            df_excl_template = self.read_count_df[
+                ~(
+                    self.read_count_df.index.get_level_values(0).str.contains(
+                        self.template_marker
+                    )
+                )
+                & ~(
+                    self.read_count_df.index.get_level_values(1).str.contains(
+                        self.template_marker
+                    )
+                )
+            ]
+            df_only_template = self.read_count_df[
+                (
+                    self.read_count_df.index.get_level_values(0).str.contains(
+                        self.template_marker
+                    )
+                )
+                & (
+                    self.read_count_df.index.get_level_values(1).str.contains(
+                        self.template_marker
+                    )
+                )
+            ]
             template_label = "template-template"
 
         ax3.scatter(
             df_excl_template["i"],
             df_excl_template[self.sample_name],
-            color="royalblue", alpha=0.3
+            color="royalblue",
+            alpha=0.3,
         )
         ax3.scatter(
             df_only_template["i"],
             df_only_template[self.sample_name],
-            color="magenta", alpha=0.7, label=template_label
+            color="magenta",
+            alpha=0.7,
+            label=template_label,
         )
         if df_only_template.shape[0] > 0:
             ax3_legend = ax3.legend(loc="upper left", frameon=False)
@@ -297,14 +345,22 @@ class PlotPanel:
 
         self.read_count_df["ideal"] = 1
 
-        self.read_count_df.sort_values(by=self.sample_name, ascending=False, inplace=True)
+        self.read_count_df.sort_values(
+            by=self.sample_name, ascending=False, inplace=True
+        )
 
         for col in [self.sample_name, "ideal"]:
-            x_values = [x / self.read_count_df.shape[0] for x in range(self.read_count_df.shape[0])]
+            x_values = [
+                x / self.read_count_df.shape[0]
+                for x in range(self.read_count_df.shape[0])
+            ]
             y_cumul = np.cumsum(self.read_count_df[col] / self.read_count_df[col].sum())
             auc = np.trapz(
                 y_cumul,
-                [i * (1.0 / self.read_count_df.shape[0]) for i in range(self.read_count_df.shape[0])],
+                [
+                    i * (1.0 / self.read_count_df.shape[0])
+                    for i in range(self.read_count_df.shape[0])
+                ],
             )
 
             x_values.append(1.0)
@@ -312,7 +368,9 @@ class PlotPanel:
                 pd.concat(
                     [
                         pd.Series([0.0]),
-                        np.cumsum(self.read_count_df[col] / self.read_count_df[col].sum()),
+                        np.cumsum(
+                            self.read_count_df[col] / self.read_count_df[col].sum()
+                        ),
                     ]
                 ).values
             )
@@ -322,7 +380,9 @@ class PlotPanel:
             else:
                 my_color = "royalblue"
 
-            ax4.plot(x_values, y_values, label=f"{col}, AUC={round(auc, 2)}", color=my_color)
+            ax4.plot(
+                x_values, y_values, label=f"{col}, AUC={round(auc, 2)}", color=my_color
+            )
 
         ax4.set_xlabel("fraction of NGS reads, ranked by abundance")
         ax4.set_ylabel("cumulative fraction of NGS reads")
@@ -356,7 +416,9 @@ class PlotPanel:
         """
         ax5 = fig.add_subplot(grid_spec[4:8, 8:16])
 
-        self.read_count_df.sort_values(by=self.sample_name, ascending=True, inplace=True)
+        self.read_count_df.sort_values(
+            by=self.sample_name, ascending=True, inplace=True
+        )
 
         top10 = np.percentile(self.read_count_df[self.sample_name], 90)
         bottom10 = np.percentile(self.read_count_df[self.sample_name], 10)
@@ -372,8 +434,10 @@ class PlotPanel:
             round(1 + 3.322 * np.log10(self.read_count_df.shape[0]))
         )  # determine number of bins using Sturge's rule
 
-        sns.histplot(data=self.read_count_df, x=self.sample_name, kde=True, bins=bins, ax=ax5)
-        #self.read_count_df[self.sample_name].hist(bins=b, grid=False, ax=ax5)
+        sns.histplot(
+            data=self.read_count_df, x=self.sample_name, kde=True, bins=bins, ax=ax5
+        )
+        # self.read_count_df[self.sample_name].hist(bins=b, grid=False, ax=ax5)
         plt.draw()
 
         ax5.axvline(bottom10, linestyle="--")

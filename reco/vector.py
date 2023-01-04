@@ -33,6 +33,7 @@ class Vector:
     -------
 
     """
+
     logger = LoggerDesc()
     name = NameDesc()
 
@@ -71,15 +72,21 @@ class Vector:
                 if vector["isDNA"]:
                     self.sequence = vector["seq"].upper()
                 else:
-                    raise ValueError(f"The sequence in '{self._vector_file}' is not a DNA sequence!")
+                    raise ValueError(
+                        f"The sequence in '{self._vector_file}' is not a DNA sequence!"
+                    )
             elif vector_file_path_suffix in [".fasta", ".fa"]:
                 self.sequence = str(SeqIO.read(self._vector_file, "fasta").seq).upper()
             elif vector_file_path_suffix in [".gb", ".gbk"]:
-                self.sequence = str(SeqIO.read(self._vector_file, "genbank").seq).upper()
+                self.sequence = str(
+                    SeqIO.read(self._vector_file, "genbank").seq
+                ).upper()
         elif alphabet(new_vector_file) == "DNA":
             self.sequence = new_vector_file
         else:
-            raise ValueError(f"This is nor a file and neither a DNA sequence: '{new_vector_file}'")
+            raise ValueError(
+                f"This is nor a file and neither a DNA sequence: '{new_vector_file}'"
+            )
 
     def find_template(self, template_length, prefix=None):
         """Find template sequence and potential restriction enzyme recognition sites for a given prefix."""
@@ -93,13 +100,27 @@ class Vector:
                 prefix_rc_index = self.sequence.find(prefix_rc)
 
                 if prefix_index > -1:
-                    template_sequence = self.sequence[prefix_index + len(prefix): prefix_index + len(prefix) + template_length]
+                    template_sequence = self.sequence[
+                        prefix_index
+                        + len(prefix) : prefix_index
+                        + len(prefix)
+                        + template_length
+                    ]
                 elif prefix_rc_index > -1:
-                    template_sequence = reverse_complement(self.sequence[prefix_rc_index - template_length: prefix_rc_index])
+                    template_sequence = reverse_complement(
+                        self.sequence[
+                            prefix_rc_index - template_length : prefix_rc_index
+                        ]
+                    )
                 else:
-                    raise ValueError(f"Could not find the prefix '{prefix}' or its reverse complement '{prefix_rc}'")
+                    raise ValueError(
+                        f"Could not find the prefix '{prefix}' or its reverse complement '{prefix_rc}'"
+                    )
                 template_name = enzymes_in_seq(template_sequence)
-                return {"template_name": template_name, "template_sequence": template_sequence}
+                return {
+                    "template_name": template_name,
+                    "template_sequence": template_sequence,
+                }
 
             raise ValueError("Prefix must be DNA string!")
         raise ValueError("Prefix is required as a string!")

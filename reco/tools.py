@@ -295,4 +295,6 @@ def zip_file_list(file_list=None, output_file=None):
     """
     with zipfile.ZipFile(output_file, "w") as zip_me:
         for file in file_list:
-            zip_me.write(file, os.path.basename(file), compress_type=zipfile.ZIP_DEFLATED)
+            zip_me.write(
+                file, os.path.basename(file), compress_type=zipfile.ZIP_DEFLATED
+            )

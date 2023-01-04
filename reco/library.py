@@ -47,6 +47,7 @@ class Library:
     to_bowtie2_index
         Build a bowtie2 index from the library.
     """
+
     logger = LoggerDesc()
 
     def __init__(self, logger=None, library_file=None):

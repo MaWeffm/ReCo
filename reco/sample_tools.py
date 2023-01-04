@@ -18,6 +18,7 @@ class SampleValidator:
     validate_paired_sample
         Validate a sample of type 'paired'.
     """
+
     def __init__(self):
         self.result = False
         self.valid = False
@@ -85,7 +86,10 @@ def validate_single_sample(sample_dict=None):
     if not (sample_dict["Lib 1"] or sample_dict["Lib 2"]):
         log_text += " One library file is required!"
         valid = False
-    if not (sample_dict["Expected reads"] == 0 or isinstance(sample_dict["Expected reads"], (int, numpy.int64))):
+    if not (
+        sample_dict["Expected reads"] == 0
+        or isinstance(sample_dict["Expected reads"], (int, numpy.int64))
+    ):
         log_text += " Expected reads must be an integer!"
         valid = False
 
@@ -94,18 +98,18 @@ def validate_single_sample(sample_dict=None):
 
 def validate_paired_sample(sample_dict=None):
     """
-        Validate a paired sample.
+    Validate a paired sample.
 
-        Parameters
-        ----------
-        sample_dict : dict
-            Dictionary containing sample information
+    Parameters
+    ----------
+    sample_dict : dict
+        Dictionary containing sample information
 
-        Returns
-        -------
-        dict
-            Dictionary: {"valid": bool, "message": str}
-        """
+    Returns
+    -------
+    dict
+        Dictionary: {"valid": bool, "message": str}
+    """
     log_text = ""
     valid = True
 
@@ -136,7 +140,10 @@ def validate_paired_sample(sample_dict=None):
         log_text += " Library file 2 does not exist!"
         valid = False
 
-    if not (sample_dict["Expected reads"] == 0 or isinstance(sample_dict["Expected reads"], (int, numpy.int64))):
+    if not (
+        sample_dict["Expected reads"] == 0
+        or isinstance(sample_dict["Expected reads"], (int, numpy.int64))
+    ):
         log_text += " Expected reads must be an integer!"
         valid = False
 

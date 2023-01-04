@@ -10,7 +10,9 @@ from reco._version import get_versions
 def gui(subparser):
     gui_command = subparser.add_parser("gui", help="Available soon: Run ReCo in a GUI")
 
-    optional = gui_command.add_argument_group(title="Optional arguments", description="")
+    optional = gui_command.add_argument_group(
+        title="Optional arguments", description=""
+    )
 
     optional.add_argument(
         "-r", "--remove_unused_files", action="store_true", help="Remove unused files."
@@ -21,7 +23,9 @@ def gui(subparser):
 def cli(subparser):
     cli_command = subparser.add_parser("cli", help="Run ReCo from the command line")
 
-    required = cli_command.add_argument_group(title="Required arguments", description="")
+    required = cli_command.add_argument_group(
+        title="Required arguments", description=""
+    )
     required.add_argument(
         "-s",
         "--sample_sheet",
@@ -37,7 +41,9 @@ def cli(subparser):
         help="The path to an output dir. Will be created if it does not exist.",
     )
 
-    optional = cli_command.add_argument_group(title="Optional arguments", description="")
+    optional = cli_command.add_argument_group(
+        title="Optional arguments", description=""
+    )
 
     optional.add_argument(
         "-r", "--remove_unused_files", action="store_true", help="Remove unused files."
@@ -63,9 +69,15 @@ def parse_args():
     parent_parser.add_argument(
         "-r", "--remove_unused_files", action="store_true", help="Remove unused files."
     )
-    parent_parser.add_argument("-j", "--cores", type=int, help="The number of cores to use.")
+    parent_parser.add_argument(
+        "-j", "--cores", type=int, help="The number of cores to use."
+    )
 
-    subparser = parent_parser.add_subparsers(help="Commands to run different flavors of ReCo", title="Subcommands", dest="subcmd")
+    subparser = parent_parser.add_subparsers(
+        help="Commands to run different flavors of ReCo",
+        title="Subcommands",
+        dest="subcmd",
+    )
 
     gui(subparser)
     cli(subparser)

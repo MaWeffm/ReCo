@@ -36,17 +36,24 @@ class CutadaptTrimmer:
     finalize_paired
         Finalize trimming by counting unique potential gRNA sequences and writing them to a fastq file.
     """
+
     logger = LoggerDesc()
 
-    def __init__(self, logger=None, max_n=Config.CUTADAPT_MAX_N, error_tolerance=Config.CUTADAPT_ERROR_TOLERANCE):
+    def __init__(
+        self,
+        logger=None,
+        max_n=Config.CUTADAPT_MAX_N,
+        error_tolerance=Config.CUTADAPT_ERROR_TOLERANCE,
+    ):
         self.logger = logger
 
         self.standard_command = [
             "cutadapt",
             "--discard-untrimmed",
-            #"--max-n", str(max_n),
-            #"--nextseq-trim=20",
-            "-e", str(error_tolerance)
+            # "--max-n", str(max_n),
+            # "--nextseq-trim=20",
+            "-e",
+            str(error_tolerance),
         ]
 
     def _run(self, command):
@@ -67,7 +74,14 @@ class CutadaptTrimmer:
         self.logger.info(proc_output)
         return proc_output
 
-    def run_single(self, sequence_length=0, homology=None, output_file=None, fastq_file=None, cores=1):
+    def run_single(
+        self,
+        sequence_length=0,
+        homology=None,
+        output_file=None,
+        fastq_file=None,
+        cores=1,
+    ):
         """
         Run the cutadapt trimmer for a SingleSample.
 
@@ -90,20 +104,36 @@ class CutadaptTrimmer:
             The cutadapt output.
         """
         command_ext = [
-            "--minimum-length", str(sequence_length),
-            "-l", str(sequence_length),
-            "-g", homology,
-            "-o", output_file,
+            "--minimum-length",
+            str(sequence_length),
+            "-l",
+            str(sequence_length),
+            "-g",
+            homology,
+            "-o",
+            output_file,
             fastq_file,
-            "-j", str(cores)
+            "-j",
+            str(cores),
         ]
         single_command = self.standard_command + command_ext
         cutadapt_output = self._run(single_command)
 
         return cutadapt_output
 
-    def run_paired(self, pair_filter=None, sequence_length_1=0, sequence_length_2=0, homology_1=None, homology_2=None,
-                   output_file_1=None, output_file_2=None, fastq_file_1=None, fastq_file_2=None, cores=1):
+    def run_paired(
+        self,
+        pair_filter=None,
+        sequence_length_1=0,
+        sequence_length_2=0,
+        homology_1=None,
+        homology_2=None,
+        output_file_1=None,
+        output_file_2=None,
+        fastq_file_1=None,
+        fastq_file_2=None,
+        cores=1,
+    ):
         """
         Run the cutadapt trimmer for a PairedSample.
 
@@ -136,22 +166,31 @@ class CutadaptTrimmer:
             The cutadapt output.
         """
         command_ext = [
-            "--pair-filter", pair_filter,
-            "--minimum-length", f"{sequence_length_1}:{sequence_length_2}",
-            "-g", homology_1,
-            "-G", homology_2,
-            "-o", output_file_1,
-            "-p", output_file_2,
+            "--pair-filter",
+            pair_filter,
+            "--minimum-length",
+            f"{sequence_length_1}:{sequence_length_2}",
+            "-g",
+            homology_1,
+            "-G",
+            homology_2,
+            "-o",
+            output_file_1,
+            "-p",
+            output_file_2,
             fastq_file_1,
             fastq_file_2,
-            "-j", str(cores)
+            "-j",
+            str(cores),
         ]
         paired_command = self.standard_command + command_ext
         cutadapt_output = self._run(paired_command)
 
         return cutadapt_output
 
-    def finalize_single(self, cutadapt_output_file=None, finalized_output=None, sequence_length=0):
+    def finalize_single(
+        self, cutadapt_output_file=None, finalized_output=None, sequence_length=0
+    ):
         """
         Finalize trimming of a SingleSample.
 
@@ -179,7 +218,15 @@ class CutadaptTrimmer:
                 if len(sequence) == sequence_length:
                     write_sequence(writefile, sequence, str(count))
 
-    def finalize_paired(self, cutadapt_output_file_1=None, cutadapt_output_file_2=None, finalized_output_1=None, finalized_output_2=None, sequence_length_1=0, sequence_length_2=0):
+    def finalize_paired(
+        self,
+        cutadapt_output_file_1=None,
+        cutadapt_output_file_2=None,
+        finalized_output_1=None,
+        finalized_output_2=None,
+        sequence_length_1=0,
+        sequence_length_2=0,
+    ):
         """
         Finalize trimming of a PairedSample.
 
@@ -209,10 +256,10 @@ class CutadaptTrimmer:
         # count all read1/read2 combinations
         for read_1, read_2 in zip(
             pyfastx.Fastq(cutadapt_output_file_1, build_index=False),
-            pyfastx.Fastq(cutadapt_output_file_2, build_index=False)
+            pyfastx.Fastq(cutadapt_output_file_2, build_index=False),
         ):
-            seq_1 = read_1[1][: sequence_length_1]
-            seq_2 = read_2[1][: sequence_length_2]
+            seq_1 = read_1[1][:sequence_length_1]
+            seq_2 = read_2[1][:sequence_length_2]
             combinations[(seq_1, seq_2)] += 1
             r1_set[seq_1] += 1
             r2_set[seq_2] += 1

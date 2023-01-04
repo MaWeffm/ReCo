@@ -30,6 +30,7 @@ class ReCo:
     run
         Run all samples.
     """
+
     reco_log = "ReCo.log"
 
     def __init__(self, sample_sheet_file=None, output_dir=None):
@@ -37,11 +38,17 @@ class ReCo:
         self.output_dir = output_dir
         self.logfile = os.path.join(self.output_dir, self.reco_log)
 
-        self.logger = setup_logger(f"ReCo {get_versions()['version']}", self.logfile, stdout=True)
+        self.logger = setup_logger(
+            f"ReCo {get_versions()['version']}", self.logfile, stdout=True
+        )
         self.logger.info("Initializing %s", self)
         self.logger.info("Sample sheet: %s", sample_sheet_file)
 
-        self.sample_sheet = SampleSheet.from_file(logger=self.logger, sample_sheet_file=sample_sheet_file, output_dir=self.output_dir)
+        self.sample_sheet = SampleSheet.from_file(
+            logger=self.logger,
+            sample_sheet_file=sample_sheet_file,
+            output_dir=self.output_dir,
+        )
 
     @property
     def output_dir(self):
@@ -54,7 +61,9 @@ class ReCo:
         try:
             os.makedirs(new_output_dir, exist_ok=False)
         except FileExistsError as exc:
-            raise FileExistsError(f"Output dir '{new_output_dir}' already exists!") from exc
+            raise FileExistsError(
+                f"Output dir '{new_output_dir}' already exists!"
+            ) from exc
         self._output_dir = new_output_dir
 
     def run(self, remove_unused_files=True, cores=1):
@@ -77,10 +86,14 @@ class ReCo:
         self.logger.info("Running on %s cores", cores)
         self.logger.info("Remove intermediate files: %s", remove_unused_files)
         valid_sample_names = list(self.sample_sheet.samples.values())
-        self.logger.info("Found %s valid samples: %s", len(valid_sample_names), valid_sample_names)
+        self.logger.info(
+            "Found %s valid samples: %s", len(valid_sample_names), valid_sample_names
+        )
 
         for sample in self.sample_sheet:
-            for step in sample.run(remove_unused_files=remove_unused_files, cores=cores):
+            for step in sample.run(
+                remove_unused_files=remove_unused_files, cores=cores
+            ):
                 print(" ", step)
 
     def __repr__(self):

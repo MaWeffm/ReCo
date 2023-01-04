@@ -19,9 +19,17 @@ class CassetteFinder:
     Class to find cassette information based on library sequences and vector information
 
     """
+
     logger = LoggerDesc()
 
-    def __init__(self, logger=None, library=None, fastq_file=None, h5_length=Config.HOMOLOGY_5_LENGTH, h3_length=Config.HOMOLOGY_3_LENGTH):
+    def __init__(
+        self,
+        logger=None,
+        library=None,
+        fastq_file=None,
+        h5_length=Config.HOMOLOGY_5_LENGTH,
+        h3_length=Config.HOMOLOGY_3_LENGTH,
+    ):
         self.logger = logger
         self.library = library
         self.fastq_file = fastq_file
@@ -32,8 +40,16 @@ class CassetteFinder:
         self.warnings = []
 
     @classmethod
-    def run(cls, logger=None, library=None, fastq_file=None, h5_length=Config.HOMOLOGY_5_LENGTH, h3_length=Config.HOMOLOGY_3_LENGTH,
-            guides_to_test_percent=Config.GUIDES_TO_TEST_PERCENT, reads_to_test=Config.READS_TO_TEST):
+    def run(
+        cls,
+        logger=None,
+        library=None,
+        fastq_file=None,
+        h5_length=Config.HOMOLOGY_5_LENGTH,
+        h3_length=Config.HOMOLOGY_3_LENGTH,
+        guides_to_test_percent=Config.GUIDES_TO_TEST_PERCENT,
+        reads_to_test=Config.READS_TO_TEST,
+    ):
         """
         Run cassette finder.
 
@@ -58,11 +74,23 @@ class CassetteFinder:
         -------
 
         """
-        c_finder = cls(logger=logger, library=library, fastq_file=fastq_file, h5_length=h5_length, h3_length=h3_length)
+        c_finder = cls(
+            logger=logger,
+            library=library,
+            fastq_file=fastq_file,
+            h5_length=h5_length,
+            h3_length=h3_length,
+        )
 
-        return c_finder.find(guides_to_test_percent=guides_to_test_percent, reads_to_test=reads_to_test)
+        return c_finder.find(
+            guides_to_test_percent=guides_to_test_percent, reads_to_test=reads_to_test
+        )
 
-    def find(self, guides_to_test_percent=Config.GUIDES_TO_TEST_PERCENT, reads_to_test=Config.READS_TO_TEST):
+    def find(
+        self,
+        guides_to_test_percent=Config.GUIDES_TO_TEST_PERCENT,
+        reads_to_test=Config.READS_TO_TEST,
+    ):
         """
         Wrapper for find_guides_in_reads.
 
@@ -77,7 +105,9 @@ class CassetteFinder:
         -------
 
         """
-        rand_guides = self.get_rand_guides(guides_to_test_percent=guides_to_test_percent)
+        rand_guides = self.get_rand_guides(
+            guides_to_test_percent=guides_to_test_percent
+        )
         test_reads = self.get_reads_to_test(reads_to_test=reads_to_test)
 
         return self.find_guides_in_reads(rand_guides, test_reads)
@@ -99,7 +129,10 @@ class CassetteFinder:
         if guides_to_test_percent == 100:
             rand_guides = self.library.lib_df["sequence"].values
         else:
-            rand_guides = random.sample(self.library.lib_df["sequence"].values, max(1, int((len(self.library) / 100) * guides_to_test_percent)))
+            rand_guides = random.sample(
+                self.library.lib_df["sequence"].values,
+                max(1, int((len(self.library) / 100) * guides_to_test_percent)),
+            )
         self.logger.info("Testing %s guides", len(rand_guides))
         return rand_guides
 
@@ -160,7 +193,7 @@ class CassetteFinder:
             rand_guides,
             desc=f"Determine library direction ({len(rand_guides):n} guides in {len(test_reads):n} reads)",
             total=len(rand_guides),
-            unit=" guides"
+            unit=" guides",
         ):
             for read in test_reads:
                 forward_match, reverse_match = guide_in_seq(
@@ -209,7 +242,10 @@ class CassetteFinder:
                     "More than one forward homology found, sample mix-up or mislabeling?"
                 )
                 self.warnings.append(f" => {str(forward_homologies_5.most_common(5))}")
-            return {"lib_dir": "forward", "homology": forward_homologies_5.most_common(1)[0][0]}
+            return {
+                "lib_dir": "forward",
+                "homology": forward_homologies_5.most_common(1)[0][0],
+            }
         else:
             # direction is reverse
             if (
@@ -224,7 +260,10 @@ class CassetteFinder:
                     "More than one reverse homology found, sample mix-up or mislabeling?"
                 )
                 self.warnings.append(f" => {str(reverse_homologies_5.most_common(5))}")
-            return {"lib_dir": "reverse", "homology": reverse_homologies_5.most_common(1)[0][0]}
+            return {
+                "lib_dir": "reverse",
+                "homology": reverse_homologies_5.most_common(1)[0][0],
+            }
 
     def __repr__(self):
         return f"<{self.__class__.__name__}>"

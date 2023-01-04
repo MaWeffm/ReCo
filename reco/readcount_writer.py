@@ -23,6 +23,7 @@ class ReadcountWriter:
     counts_from_sam
     write_counter
     """
+
     logger = LoggerDesc()
 
     def __init__(self, logger=None):
@@ -53,7 +54,12 @@ class ReadcountWriter:
         sam_reads = count_sam_reads(sam_file)
         sam_handle = pysam.AlignmentFile(sam_file, "rb")
         self.logger.info("Alignments: %s", f"{sam_reads:n}")
-        for alignment in tqdm.tqdm(sam_handle.fetch(), desc=" Fetching Bowtie2 alignments", total=sam_reads, unit=" alignments"):
+        for alignment in tqdm.tqdm(
+            sam_handle.fetch(),
+            desc=" Fetching Bowtie2 alignments",
+            total=sam_reads,
+            unit=" alignments",
+        ):
             alignment_info = test_alignment(alignment)
 
             reference_name = alignment_info["reference_name"]
@@ -70,9 +76,20 @@ class ReadcountWriter:
 
         sam_handle.close()
         print("   Counted in", datetime.datetime.now() - count_start)
-        return {"guide_hitlist": guide_hitlist, "sequence_hitlist": sequence_hitlist, "failed": failed}
+        return {
+            "guide_hitlist": guide_hitlist,
+            "sequence_hitlist": sequence_hitlist,
+            "failed": failed,
+        }
 
-    def write_counter(self, count_tables=None, count_col_name=None, counts_file=None, failed_file=None, top_failed_file=None):
+    def write_counter(
+        self,
+        count_tables=None,
+        count_col_name=None,
+        counts_file=None,
+        failed_file=None,
+        top_failed_file=None,
+    ):
         """
         Write count tables to files.
 
@@ -106,11 +123,15 @@ class ReadcountWriter:
         read_count_table.index.names = ["Guide"]
         read_count_table.to_csv(counts_file)
 
-        with open(failed_file, "w", encoding="utf-8") as writefile, open(top_failed_file, "w", encoding="utf-8") as top_failed_file_writer:
+        with open(failed_file, "w", encoding="utf-8") as writefile, open(
+            top_failed_file, "w", encoding="utf-8"
+        ) as top_failed_file_writer:
             writefile.write("sequence,status,score,nearest gRNA,count\n")
             top_failed_file_writer.write("sequence,status,score,nearest gRNA,count\n")
             failed_seq_counter = 0
-            for seq, count in sorted(failed.items(), key=lambda item: item[1], reverse=True):
+            for seq, count in sorted(
+                failed.items(), key=lambda item: item[1], reverse=True
+            ):
                 writefile.write(f"{seq},{failed[seq]}\n")
                 if failed_seq_counter < Config.TOP_FAILED_SEQUENCES:
                     top_failed_file_writer.write(f"{seq},{failed[seq]}\n")
@@ -141,7 +162,7 @@ def test_alignment(alignment):
     dict
         {"reference_name": alignment.reference_name, "sequence": sequence, "count": count, "status": status, "score": as_tag}
     """
-    my_alignment_split = str(alignment).split('\t', maxsplit=1)[0]
+    my_alignment_split = str(alignment).split("\t", maxsplit=1)[0]
     count = int(my_alignment_split.split("_")[1])
     sequence = my_alignment_split.split("_")[0]
     as_tag = ""
@@ -162,4 +183,10 @@ def test_alignment(alignment):
     else:
         status = "failed"
 
-    return {"reference_name": alignment.reference_name, "sequence": sequence, "count": count, "status": status, "score": as_tag}
+    return {
+        "reference_name": alignment.reference_name,
+        "sequence": sequence,
+        "count": count,
+        "status": status,
+        "score": as_tag,
+    }

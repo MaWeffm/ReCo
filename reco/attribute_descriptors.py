@@ -6,6 +6,7 @@ import os
 
 class NameDesc:
     """Descriptor for class name attribute."""
+
     def __set_name__(self, owner, name):
         self._name = name
 
@@ -23,6 +24,7 @@ class LoggerDesc:
     """
     Descriptor for logger attribute.
     """
+
     def __get__(self, obj, object_type=None):
         return self.value
 
@@ -36,6 +38,7 @@ class FileDesc:
     """
     Descriptor for files.
     """
+
     def __set_name__(self, owner, name):
         self.public_name = name
         self.private_name = f"_{name}"

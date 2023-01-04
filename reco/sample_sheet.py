@@ -25,6 +25,7 @@ class SampleSheet:
     Methods
     -------
     """
+
     sample_sheet_file = FileDesc()
     logger = LoggerDesc()
 
@@ -44,7 +45,9 @@ class SampleSheet:
     @classmethod
     def from_file(cls, logger=None, sample_sheet_file=None, output_dir=None):
         """Build sample sheet instance directly from sample sheet file."""
-        s_sheet = cls(logger=logger, sample_sheet_file=sample_sheet_file, output_dir=output_dir)
+        s_sheet = cls(
+            logger=logger, sample_sheet_file=sample_sheet_file, output_dir=output_dir
+        )
         s_sheet.read_sample_sheet_file()
         return s_sheet
 
@@ -67,13 +70,17 @@ class SampleSheet:
         cleaned_sample_sheet_df.fillna("", inplace=True)
         cleaned_sample_sheet_df.replace("", None, inplace=True)
 
-        cleaned_sample_sheet_df["Sample name"] = cleaned_sample_sheet_df["Sample name"].str.translate(
+        cleaned_sample_sheet_df["Sample name"] = cleaned_sample_sheet_df[
+            "Sample name"
+        ].str.translate(
             {ord(c): "_" for c in r"!@#$%^&*()[]{};:,./<>?\|`~-=+ "}
         )  # replace special characters with "_", otherwise file system/platform stuff will become ugly
 
         self.sample_sheet_df = cleaned_sample_sheet_df
 
-        self.logger.info(f"Unique samples: {list(cleaned_sample_sheet_df['Sample name'].values)}")
+        self.logger.info(
+            f"Unique samples: {list(cleaned_sample_sheet_df['Sample name'].values)}"
+        )
 
         self.create_samples()
 
@@ -93,10 +100,14 @@ class SampleSheet:
 
             if valid["valid"]:
                 if sample_dict["Sample type"] == "single":
-                    self.samples[sample_counter] = SingleSample(sample_dict=sample_dict, output_dir=self.output_dir)
+                    self.samples[sample_counter] = SingleSample(
+                        sample_dict=sample_dict, output_dir=self.output_dir
+                    )
                     sample_counter += 1
                 elif sample_dict["Sample type"] == "paired":
-                    self.samples[sample_counter] = PairedSample(sample_dict=sample_dict, output_dir=self.output_dir)
+                    self.samples[sample_counter] = PairedSample(
+                        sample_dict=sample_dict, output_dir=self.output_dir
+                    )
                     sample_counter += 1
             else:
                 self.logger.warning(valid)

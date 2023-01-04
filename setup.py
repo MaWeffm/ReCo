@@ -1,4 +1,5 @@
 import setuptools
+import versioneer
 
 with open("README.rst", "r") as fh:
     long_description = fh.read()
@@ -7,7 +8,8 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="reco",
-    version="v_init",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     author="Martin Wegner",
     author_email="martinwegner1983@gmail.com",
     description="A Python library to find gRNA read counts in fastq files.",

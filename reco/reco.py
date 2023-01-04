@@ -9,7 +9,7 @@ import os
 from .logger import setup_logger
 from .sample_sheet import SampleSheet
 
-# from ._version import get_versions
+from ._version import get_versions
 
 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
@@ -37,8 +37,7 @@ class ReCo:
         self.output_dir = output_dir
         self.logfile = os.path.join(self.output_dir, self.reco_log)
 
-        # self.logger = setup_logger(f"ReCo {get_versions()['version']}", self.logfile, stdout=True)
-        self.logger = setup_logger(f"ReCo v_init", self.logfile, stdout=True)
+        self.logger = setup_logger(f"ReCo {get_versions()['version']}", self.logfile, stdout=True)
         self.logger.info("Initializing %s", self)
         self.logger.info("Sample sheet: %s", sample_sheet_file)
 
@@ -85,9 +84,7 @@ class ReCo:
                 print(" ", step)
 
     def __repr__(self):
-        # return f"<{self.__class__.__name__} v{get_versions()['version']}>"
-        return f"<{self.__class__.__name__} v_init>"
+        return f"<{self.__class__.__name__} v{get_versions()['version']}>"
 
     def __str__(self):
-        # return f"{self.__class__.__name__} v{get_versions()['version']}, {self.date}"
-        return f"{self.__class__.__name__} v_init, {self.date}"
+        return f"{self.__class__.__name__} v{get_versions()['version']}, {self.date}"

@@ -25,7 +25,7 @@ from .tools import zip_file_list
 from .trimmer import CutadaptTrimmer
 from .vector import Vector
 
-# from ._version import get_versions
+from ._version import get_versions
 
 
 class Sample:
@@ -62,8 +62,7 @@ class Sample:
         self.logfile = os.path.join(self.output_dir, f"ReCo_{self.name}.log")
 
         self.logger = setup_logger(self.name, self.logfile, stdout=True)
-        # self.logger.info("ReCo v%s: initializing sample '%s'", get_versions()['version'], self.name)
-        self.logger.info("ReCo v%s: initializing sample '%s'", "v_init", self.name)
+        self.logger.info("ReCo v%s: initializing sample '%s'", get_versions()['version'], self.name)
         self.logger.info("Created: %s", self.output_dir)
         self.logger.info("Created: %s", self.bowtie2_index_dir)
 
@@ -303,8 +302,7 @@ class SingleSample(Sample):
 
         """
         with open(self.report_file, "w", encoding="utf-8") as writefile:
-            # writefile.write(f"ReCo {get_versions()['version']}\n")
-            writefile.write(f"ReCo v_init\n")
+            writefile.write(f"ReCo {get_versions()['version']}\n")
             writefile.write(f"{self}\n")
             writefile.write(f"Library: {self.lib_file} ({len(self.lib)} guides)\n")
             writefile.write(f"Vector: {self.vector_file}\n")
@@ -585,8 +583,7 @@ class PairedSample(Sample):
 
         """
         with open(self.report_file, "w", encoding="utf-8") as writefile:
-            # writefile.write(f"ReCo {get_versions()['version']}\n")
-            writefile.write(f"ReCo v_init\n")
+            writefile.write(f"ReCo {get_versions()['version']}\n")
             writefile.write(f"{self}\n")
             writefile.write(f"Library 1: {self.lib_file_1} ({len(self.lib_1)} guides)\n")
             writefile.write(f"Library 2: {self.lib_file_2} ({len(self.lib_2)} guides)\n")

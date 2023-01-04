@@ -4,7 +4,7 @@ import argparse
 import sys
 
 from reco.reco import ReCo
-# from reco._version import get_versions
+from reco._version import get_versions
 
 
 def gui(subparser):
@@ -55,12 +55,10 @@ def parse_args():
         Namespace populated with attributes.
     """
     parent_parser = argparse.ArgumentParser(
-        # description=f"ReCo v{get_versions()['version']}: find gRNA read counts (ReCo) in fastq files."
-        description=f"ReCo v_init: find gRNA read counts (ReCo) in fastq files."
+        description=f"ReCo v{get_versions()['version']}: find gRNA read counts (ReCo) in fastq files."
     )
     parent_parser.add_argument(
-        # "-v", "--version", action="version", version=f"{get_versions()['version']}"
-        "-v", "--version", action="version", version=f"v_init"
+        "-v", "--version", action="version", version=f"{get_versions()['version']}"
     )
     parent_parser.add_argument(
         "-r", "--remove_unused_files", action="store_true", help="Remove unused files."

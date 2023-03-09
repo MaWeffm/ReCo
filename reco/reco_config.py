@@ -2,6 +2,7 @@
 
 
 class Config:  # pylint: disable=too-few-public-methods
+    # Todo: refactor as data class
     """The ReCo configuration class."""
 
     LIBRARY_FILE_FORMATS = [".xlsx", ".csv", ".tsv", ".txt", ""]
@@ -34,6 +35,6 @@ class Config:  # pylint: disable=too-few-public-methods
     HOMOLOGY_5_LENGTH = 12
     HOMOLOGY_3_LENGTH = 12
 
-    HOMOLOGY_ABUNDANCE_DIFFERENCE_PERCENT = 20
+    HOMOLOGY_ABUNDANCE_DIFFERENCE_PERCENT = 50
 
     TOP_FAILED_SEQUENCES = 100

@@ -57,8 +57,6 @@ Install directly from GitHub but make sure to have Cutadapt 2.8 and Bowtie2 2.3.
 
 ``pip install git+https://github.com/MaWeffm/reco.git#egg=reco``
 
-PyPi
-
 Usage
 -----
 ReCo works both as a script that can be invoked from the command line and as a python package.
@@ -74,17 +72,6 @@ Use ReCo from the command line:
 ``--s``: path to the sample sheet (required)
 
 ``--o``: path to output dir (required)
-
-``-j 15``: use 15 cores (optional, default is 1)
-
-``-r``: remove all intermediate files upon successful termination (optional, default is True)
-
-
-Start the ReCo GUI:
-
-.. code:: sh
-
-	$ ReCo gui -j 15 -r
 
 ``-j 15``: use 15 cores (optional, default is 1)
 

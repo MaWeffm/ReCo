@@ -184,13 +184,6 @@ For each sample, ReCo creates a sub folder in the specified output folder and ge
 
   These two files contain a plot panel visualizing properties of the sequenced library.
 
-Examples
---------
-Single-end
-~~~~~~~~~~
-Paired-end
-~~~~~~~~~~
-
 Links
 -----
 * `Source code <https://github.com/MaWeffm/ReCo/>`_

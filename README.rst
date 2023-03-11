@@ -42,7 +42,7 @@ Cutadapt: https://doi.org/10.14806/ej.17.1.200
 
 Bowtie2: https://doi.org/10.1038/nmeth.1923
 
-ReCo!: tba
+ReCo!: https://biorxiv.org/cgi/content/short/2023.03.09.530923v1
 
 ------------------------------------------
 

@@ -112,7 +112,7 @@ In .tsv and .txt files the field separator must be a tab (\\t).
 
 The first row of the sample sheet file must be a header shown as above. After that, each row represents a sample. The first column (Sample name) contains the sample name. Try to use meaningful names, your future you
 will be grateful! The second column (Sample type) contains the type of sample. A single sample requires one fastq file and one library file.
-A mpx sample requires two fastq files as a result from paired-end sequencing, and two library files. The third
+A paired sample requires two fastq files as a result from paired-end sequencing, and two library files. The third
 column (Vector) contains the path to a vector file in one of the following formats: .dna, .gb, .gbk., .fa, .fasta, or .txt.
 The 4. and 5. columns (FastQ read 1, FastQ read 2)contain paths to fastq files. The fastq files can be read compressed (.fasta.gz) or uncompressed (.fasta).
 For a sample of type single, use one of the columns only.
